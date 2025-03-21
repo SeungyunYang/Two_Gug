@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<head>
+    <title>
+
+    </title>
+    <style>
+        body {
+            background-color: red;
+        }
+        img {
+            width: 100%;
+        }
+        .keyhole {
+            position: relative;
+            display: block;
+            margin: 0 auto;
+            width: 10%;
+            bottom: 300px;
+        }
+        .keyhole:hover {
+            cursor: pointer;
+        }
+        .container {
+            position: relative;
+            padding-bottom: 0px; /* Ensure space at the bottom for the keyhole image */
+        }
+        .follower {
+            position: fixed;
+            pointer-events: none; /* Make sure the image doesn't interfere with clicks */
+            transform: scale(0.15); /* Scale down to one-quarter size */
+            transform-origin: top left; /* Ensure scaling is from the top-left corner */
+        }
+        .ball {
+            position: fixed; /* Change to fixed */
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-100px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="arc_view.png" alt="Arc View" id="arcView">
+        <img src="keyhole_white.png" alt="Keyhole White" class="keyhole" id="keyhole">
+    </div>
+    <script>
+        let currentImageIndex = 0;
+        const totalImages = 15;
+        const follower = document.createElement('img');
+        follower.className = 'follower';
+        document.body.appendChild(follower);
+
+        const audio = new Audio('paging_book.wav');
+
+        document.getElementById('arcView').addEventListener('click', function() {
+            currentImageIndex = (currentImageIndex % totalImages) + 1;
+            follower.src = `awb_${String(currentImageIndex).padStart(2, '0')}.png`;
+            audio.play();
+        });
+
+        document.addEventListener('mousemove', function(event) {
+            follower.style.left = event.clientX + 'px';
+            follower.style.top = event.clientY + 'px';
+        });
+
+        document.addEventListener('click', function() {
+            // Remove existing balls
+            document.querySelectorAll('.ball').forEach(ball => ball.remove());
+            // Create new balls
+            for (let i = 0; i < 10; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'ball';
+                ball.style.left = Math.random() * window.innerWidth + 'px';
+                ball.style.top = Math.random() * window.innerHeight + 'px';
+                document.body.appendChild(ball);
+            }
+        });
+
+        document.getElementById('keyhole').addEventListener('click', function() {
+            window.location.href = 'twoGug_arc_fin.html';
+        });
+    </script>
+</body>
+
+</html>

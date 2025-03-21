@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<head>
+    <title>
+
+    </title>
+    <style>
+        body {
+            background-color: black;
+        }
+        .left-half, .right-half {
+            position: absolute;
+            top: 0;
+            height: 100vh;
+            width: 50%;
+        }
+        .left-half {
+            left: 0;
+        }
+        .right-half {
+            right: 0;
+        }
+        .left-half img, .right-half img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+        }
+        .expanding-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            transition: width 0.5s ease, height 0.5s ease;
+        }
+        .expand {
+            width: 100vw;
+            height: 100vh;
+        }
+        .keyhole {
+            position: fixed;
+            width: 100px; /* Adjusted size */
+            height: 187.5px; /* Adjusted size */
+            pointer-events: none;
+            z-index: 1001;
+            display: none;
+        }
+        .show-keyhole {
+            display: block;
+        }
+        .bouncing-ball {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background-color: black;
+            border-radius: 50%;
+            z-index: 1002;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-100px);
+            }
+        }
+        .hidden {
+            display: none;
+        }
+        .center-image {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 100vh; /* Set height to window height */
+            width: auto;
+            display: none;
+            z-index: 1003;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .fade-in {
+            opacity: 1;
+        }
+        .scale-up {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+       
+    </style>
+</head>
+
+<body>
+    <div class="left-half">
+        <img src="gug_01.png" alt="Gug Image">
+    </div>
+    <div class="right-half">
+        <img src="arc_01.png" alt="Arc Image">
+    </div>
+    <audio id="knockDoorSound" src="knockdoor.wav"></audio>
+    <audio id="footstepSound" src="footstep.wav"></audio>
+    <img src="artist_white.png" class="expanding-image" id="expandingImageWhite" alt="Expanding Image White">
+    <img src="artist_red.png" class="expanding-image" id="expandingImageRed" alt="Expanding Image Red">
+    <img src="keyhole.png" class="keyhole" id="keyhole" alt="Keyhole">
+    <div class="bouncing-ball" id="ball1"></div>
+    <div class="bouncing-ball" id="ball2"></div>
+    <div class="bouncing-ball" id="ball3"></div>
+    <div class="bouncing-ball" id="ball4"></div>
+    <div class="bouncing-ball" id="ball5"></div>
+    <img src="gug_01.png" class="center-image" id="centerGug" alt="Gug Image Center">
+    <img src="arc_01.png" class="center-image" id="centerArc" alt="Arc Image Center">
+    <script>
+        document.querySelector('.left-half img').addEventListener('click', () => {
+            const audio = document.getElementById('knockDoorSound');
+            audio.currentTime = 0;
+            audio.play();
+            const image = document.getElementById('expandingImageWhite');
+            image.classList.add('expand');
+            const keyhole = document.getElementById('keyhole');
+            keyhole.classList.add('show-keyhole');
+            document.querySelectorAll('.bouncing-ball').forEach(ball => {
+                ball.style.display = 'block';
+                ball.style.left = `${Math.random() * window.innerWidth}px`;
+                ball.style.top = `${Math.random() * window.innerHeight}px`;
+            });
+        });
+
+        document.querySelector('.right-half img').addEventListener('click', () => {
+            const audio = document.getElementById('knockDoorSound');
+            audio.currentTime = 0;
+            audio.play();
+            const image = document.getElementById('expandingImageRed');
+            image.classList.add('expand');
+            const keyhole = document.getElementById('keyhole');
+            keyhole.classList.add('show-keyhole');
+            document.querySelectorAll('.bouncing-ball').forEach(ball => {
+                ball.style.display = 'block';
+                ball.style.left = `${Math.random() * window.innerWidth}px`;
+                ball.style.top = `${Math.random() * window.innerHeight}px`;
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const keyhole = document.getElementById('keyhole');
+            if (keyhole.classList.contains('show-keyhole')) {
+                keyhole.style.left = `${e.clientX}px`;
+                keyhole.style.top = `${e.clientY}px`;
+            }
+        });
+
+        function hideAll() {
+            document.querySelectorAll('.left-half, .right-half, .expanding-image, .keyhole, .bouncing-ball').forEach(element => {
+                element.classList.add('hidden');
+            });
+        }
+
+        function fadeIn(element) {
+            element.classList.add('fade-in');
+        }
+
+        function scaleUp(element, redirectUrl) {
+            let scale = 1;
+            const footstepAudio = document.getElementById('footstepSound');
+            footstepAudio.currentTime = 0;
+            footstepAudio.play();
+            let interval = setInterval(() => {
+                scale += 0.4;
+                element.style.transform = `translate(-50%, -50%) scale(${scale})`;
+            }, 1000);
+            setTimeout(() => {
+                clearInterval(interval);
+                footstepAudio.pause();
+                window.location.href = redirectUrl; // Redirect after 10 seconds
+            }, 10000);
+        }
+
+        document.getElementById('expandingImageWhite').addEventListener('click', () => {
+            hideAll();
+            setTimeout(() => {
+                const centerGug = document.getElementById('centerGug');
+                centerGug.style.display = 'block';
+                fadeIn(centerGug);
+                setTimeout(() => {
+                    centerGug.src = 'gug_02.png';
+                    centerGug.classList.remove('fade-in');
+                    fadeIn(centerGug);
+                    setTimeout(() => {
+                        centerGug.src = 'gug_03.png';
+                        centerGug.classList.remove('fade-in');
+                        fadeIn(centerGug);
+                        scaleUp(centerGug, 'twoGug_gug.html');
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        });
+
+        document.getElementById('expandingImageRed').addEventListener('click', () => {
+            hideAll();
+            setTimeout(() => {
+                const centerArc = document.getElementById('centerArc');
+                centerArc.style.display = 'block';
+                fadeIn(centerArc);
+                setTimeout(() => {
+                    centerArc.src = 'arc_02.png';
+                    centerArc.classList.remove('fade-in');
+                    fadeIn(centerArc);
+                    setTimeout(() => {
+                        centerArc.src = 'arc_03.png';
+                        centerArc.classList.remove('fade-in');
+                        fadeIn(centerArc);
+                        scaleUp(centerArc, 'twoGug_arc.html');
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

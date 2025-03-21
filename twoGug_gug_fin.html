@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+
+    </title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #cameraCanvas {
+            width: 100%;
+            height: auto;
+            filter: sepia(1) hue-rotate(-50deg) saturate(10); /* 빨간 필터 */
+            transform: scaleX(-1); /* 좌우 반전 */
+        }
+        .pixelate {
+            image-rendering: pixelated;
+        }
+        /* New styles for the images */
+        #realistImageBottom {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(-1); /* 좌우 반전 추가 */
+            width: 80%; /* 윈도우 너비의 80% */
+            height: auto; /* 원본 비율 유지 */
+        }
+        #realistImageTop {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%; /* 윈도우 너비의 80% */
+            height: auto; /* 원본 비율 유지 */
+        }
+        /* Styles for the keyhole image */
+        #keyholeImage {
+            position: absolute;
+            display: none;
+            pointer-events: none;
+            width: 5%; /* 윈도우 너비의 20분의 1 */
+            height: auto; /* 원본 비율 유지 */
+        }
+        /* Change cursor to pointer when hovering over the images */
+        #realistImageTop:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="cameraCanvas"></canvas>
+    <!-- Updated image elements -->
+    <img id="realistImageBottom" src="im_realist.png" alt="I am a Realist">
+    <img id="realistImageTop" src="im_realist.png" alt="I am a Realist">
+    <!-- Keyhole image element -->
+    <img id="keyholeImage" src="keyhole_white.png" alt="Keyhole">
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.play();
+
+                const canvas = document.getElementById('cameraCanvas');
+                const context = canvas.getContext('2d');
+
+                function resizeCanvas() {
+                    const aspectRatio = video.videoWidth / video.videoHeight;
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerWidth / aspectRatio;
+                }
+
+                window.addEventListener('resize', resizeCanvas);
+                video.addEventListener('loadeddata', resizeCanvas);
+
+                video.addEventListener('loadeddata', () => {
+                    function draw() {
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        context.imageSmoothingEnabled = false;
+                        context.drawImage(canvas, 0, 0, canvas.width / 10, canvas.height / 10);
+                        context.drawImage(canvas, 0, 0, canvas.width / 10, canvas.height / 10, 0, 0, canvas.width, canvas.height);
+                        requestAnimationFrame(draw);
+                    }
+
+                    draw();
+                });
+            })
+            .catch(err => {
+                console.error("Error accessing the camera: ", err);
+            });
+
+        // JavaScript to handle keyhole image visibility and movement
+        const keyholeImage = document.getElementById('keyholeImage');
+        const realistImageTop = document.getElementById('realistImageTop');
+
+        realistImageTop.addEventListener('mouseenter', () => {
+            keyholeImage.style.display = 'block';
+        });
+
+        realistImageTop.addEventListener('mouseleave', () => {
+            keyholeImage.style.display = 'none';
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            keyholeImage.style.left = `${event.clientX}px`;
+            keyholeImage.style.top = `${event.clientY}px`;
+        });
+
+        // Add click event to navigate to twoGug.html
+        realistImageTop.addEventListener('click', () => {
+            window.location.href = 'twoGug.html';
+        });
+    </script>
+</body>
+
+</html>

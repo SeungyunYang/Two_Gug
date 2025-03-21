@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #cameraCanvas {
+            width: 100%;
+            height: auto;
+            transform: scaleX(-1); /* 좌우 반전 */
+        }
+        .pixelate {
+            image-rendering: auto; /* 픽셀화 효과 제거 */
+        }
+        #realistImageBottom {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            width: 80%;
+            height: auto;
+            transform: translateX(-50%) scaleX(-1); /* 좌우 반전 추가 */
+        }
+        #realistImageBottom:hover {
+            cursor: pointer;
+        }
+        #realistImageTop {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            width: 80%;
+            height: auto;
+            transform: translateX(-50%);
+        }
+        #keyholeImage {
+            position: absolute;
+            display: none;
+            pointer-events: none;
+            width: 5%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="cameraCanvas"></canvas>
+    <img id="realistImageBottom" src="im_artist.png" alt="I am an Artist">
+    <img id="realistImageTop" src="im_artist.png" alt="I am an Artist">
+    <img id="keyholeImage" src="keyhole_white.png" alt="Keyhole">
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.play();
+
+                const canvas = document.getElementById('cameraCanvas');
+                const context = canvas.getContext('2d');
+
+                function resizeCanvas() {
+                    const aspectRatio = video.videoWidth / video.videoHeight;
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerWidth / aspectRatio;
+                }
+
+                window.addEventListener('resize', resizeCanvas);
+                video.addEventListener('loadeddata', resizeCanvas);
+
+                video.addEventListener('loadeddata', () => {
+                    function draw() {
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        context.imageSmoothingEnabled = true;
+                        requestAnimationFrame(draw);
+                    }
+
+                    draw();
+                });
+            })
+            .catch(err => {
+                console.error("Error accessing the camera: ", err);
+            });
+
+        const keyholeImage = document.getElementById('keyholeImage');
+        const realistImageBottom = document.getElementById('realistImageBottom');
+
+        realistImageBottom.addEventListener('mouseenter', () => {
+            keyholeImage.style.display = 'block';
+        });
+
+        realistImageBottom.addEventListener('mouseleave', () => {
+            keyholeImage.style.display = 'none';
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            keyholeImage.style.left = `${event.clientX}px`;
+            keyholeImage.style.top = `${event.clientY}px`;
+        });
+
+        realistImageBottom.addEventListener('click', () => {
+            window.location.href = 'twoGug.html';
+        });
+    </script>
+</body>
+
+</html>
