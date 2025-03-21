@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
+
+        body {
+            background-color: black;
+        }
+
+        #box_glitch {
+            position: absolute;
+            top: 400px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        #counting_star {
+            position: absolute;
+            color: white;
+            text-shadow: -150px -120px 15px white;
+            width: 5vw;
+            height: 3000px;
+            right: 600px;
+            top: 200px;
+            font-size: 240px;
+            font-family: 'Abril Fatface', serif;
+            text-align: left;
+        }
+
+        #counting_star .highlight {
+            color: #55ff00;
+        }
+
+        #welcome {
+            position: fixed;
+            font-family: 'Rubik Glitch', sans-serif;
+            color: white;
+            font-size: 60px;
+            top: 50px;
+            left: 50px;
+        }
+
+        #welcome .highlight {
+            color: #55ff00;
+        }
+
+        #loneliness {
+            position: absolute;
+            top: 3600px;
+            left: 100px;
+            width: 50vw;
+            height: 80vh;
+            opacity: .8;
+        }
+
+        #moon {
+            position: fixed;
+            bottom: -250px;
+            left: 100px;
+            width: 500px;
+            height: 500px;
+            opacity: 1;
+            border-radius: 50%;
+        }
+
+        #shooting_star {
+            position: fixed;
+            bottom: 2vh;
+            z-index: 11;
+            width: 100vw;
+            height: 50vw;
+            opacity: .6;
+        }
+
+        #star_twinkle {
+            position: fixed;
+            top: 50px;
+            right: 1vw;
+            z-index: 11;
+            width: 400px;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="box_glitch" autoplay muted loop>
+        <source src="box_glitch.mp4" type="video/mp4">
+    </video>
+    <img id="loneliness" src="loneliness.gif">
+    <img id="moon" src="moon.gif">
+    <img id="shooting_star" src="shooting_star.gif">
+    <img id="star_twinkle" src="star_twinkle.gif">
+    <div id="counting_star">
+        I<br>
+        See<br>
+        <span class="highlight">Memories</span><br>
+        In<br>
+        One<br>
+        Star<br>
+        And<br>
+        One<br>
+        In<br>
+        Another<br>
+        And<br>
+        <span class="highlight">Loneliness</span><br>
+        My<br>
+        <span class="highlight">Longings</span><br>
+        And<br>
+        <span class="highlight">Poetry</span><br>
+        In<br>
+        Each
+    </div>
+    <div id="welcome"><span class="highlight">WELCOME</span><br>WELCOM<br>WELCO<br>WELC<br>WEL<br>WE<br>W</div>
+</body>
+
+</html>
